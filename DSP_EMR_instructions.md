@@ -1,12 +1,23 @@
 # Electronic Medical Records DSP
 
+
+https://us-west-2.console.aws.amazon.com/cloud9/home/create
+Give name (e.g., <netid>-emr)
+Next step button
+
+Change Platform to Ubuntu Server 18.04 LTS; otherwise, accept defaults (create new ec2 instance, t2.micro, 30 min hibernate, awsserviceroleforawscloud9)
+Next step button
+
+Create environment button
+
+
+
+
 ## Overview
 
 This project uses the MIMIC-III dataset, which is freely available, but requires credentialling through CITI and MIT.  If you have not already completed the process to get access to the database, see physionet [https://physionet.org/content/mimiciii/1.4/](https://physionet.org/content/mimiciii/1.4/), you need to complete that before you can run this project.
 
 This project will walk you through an implementation using EMR ICD-9 data codes from the MIMIC dataset to predict future hospital events. Specifically, it uses the ADMISSIONS.csv files which contain diagnosis codes.  Additional codes in the MIMIC dataset include procedure and drug codes.
-
-The ways in which you could extend this include modifying this model to predict timing of events, predict a specific type of diagnosis only, or extend it to predict drug and procedure events in addition to diagnostics.  
 
 ## Resources
 
@@ -27,11 +38,16 @@ arXiv preprint arXiv:1602.03686
 
 And uses the codebase developed and available here:
 [https://github.com/mp2893/doctorai](https://github.com/mp2893/doctorai)
+(PROCEDURE BELOW WILL COPY A VERSION OF THIS CODE)
 
 ## Tutorial
 
+Create AWS C9. Following commands should be run from prompt in C9.
+
 1. Access your AWS C9 (needs Anaconda)
 
+OR REPLACE WITH LOCAL INSTALL?
+DOES THIS REPO EXIST?
     ``` bash
     docker run -i -t --rm --name my_anaconda3 -v $(pwd):/home/ubuntu/projects/ \
         -w /home/ubuntu/projects/ continuumio/anaconda3 /bin/bash
@@ -102,5 +118,8 @@ And uses the codebase developed and available here:
 
 ## Extensions
 
-The ways in which you could extend this include modifying this model to predict timing of events, predict a specific type of diagnosis only, or extend it to predict drug and procedure events in addition to diagnostics.  
+The ways in which you could extend this include modifying this model to predict timing of events or to predict a specific type of diagnosis only, or extending it to predict drug and procedure events in addition to diagnostics.  
 
+MANAGING C9 COSTS; HIBERNATION
+UPLOADING AND DOWNLOADING FILES
+CLEANING UP ENVIRONMENT
