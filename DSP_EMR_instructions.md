@@ -59,9 +59,16 @@ DOES THIS REPO EXIST?
     git clone https://github.com/CICOM/EMR_DSP.git...
     cd EMR_DSP
     ```
+git clone https://github.com/mp2893/doctorai.git
 
 3. Download MIMIC dataset files with your credentialed physionet `[username]` and `[password]`
 
+open https://physionet.org/content/mimiciii/1.4/ in browser
+near top-right corner, if you see "Account", click to expand menu and select Login; enter credentials; you'll be redirected to a different page; go back to URL above 
+Once there, scroll to the bottom to the “Files” section. If the page shows a restricted-access warning, you need to get access to MIMIC-III or sign the data use agreement for this project. Otherwise, you should see the following:
+
+
+wget -r -N -c -np --user mjberry --ask-password https://physionet.org/files/mimiciii/1.4/
     ``` bash
     wget --user [username] --ask-password -O mimic-iii-clinical-database-1.4.zip \
         https://physionet.org/content/mimiciii/get-zip/1.4/
@@ -73,8 +80,9 @@ DOES THIS REPO EXIST?
 
     ``` bash
     conda env create -f dsp_emr_environment.yml
-    source activate dsp_emr
+    conda activate dsp_emr
     ```
+Note (dsp_emr) left of prompt. If you open a new console, will need to active again.
 
 5. Extract the ADMISSIONS and DIAGNOSES_ICD tables from the MIMIC-III zip file to the current directory.
 

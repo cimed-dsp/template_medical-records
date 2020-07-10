@@ -1,21 +1,12 @@
-LANG=C.UTF-8
-LC_ALL=C.UTF-8
-PATH=/opt/conda/bin:$PATH
+bash resize.sh 40
 
-apt-get update --fix-missing && apt-get install -y wget bzip2 ca-certificates \
-    libglib2.0-0 libxext6 libsm6 libxrender1 \
-    git mercurial subversion
+sudo apt-get update --fix-missing
+sudo apt-get install -y libgl1-mesa-glx libegl1-mesa \
+  libxrandr2 libxrandr2 libxss1 libxcursor1 libxcomposite1 libasound2 libxi6 libxtst6
 
-wget --quiet https://repo.anaconda.com/archive/Anaconda3-5.3.0-Linux-x86_64.sh -O ~/anaconda.sh && \
-    /bin/bash ~/anaconda.sh -b -p /opt/conda && \
-    rm ~/anaconda.sh && \
-    ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
-    echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
-    echo "conda activate base" >> ~/.bashrc
-
-apt-get install -y curl grep sed dpkg && \
-    TINI_VERSION=`curl https://github.com/krallin/tini/releases/latest | grep -o "/v.*\"" | sed 's:^..\(.*\).$:\1:'` && \
-    curl -L "https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini_${TINI_VERSION}.deb" > tini.deb && \
-    dpkg -i tini.deb && \
-    rm tini.deb && \
-    apt-get clean
+wget --quiet https://repo.anaconda.com/archive/Anaconda3-2020.02-Linux-x86_64.sh -O anaconda.sh
+bash anaconda.sh -b
+rm anaconda.sh
+source ~/anaconda3/bin/activate
+conda init
+source ~/.bashrc
