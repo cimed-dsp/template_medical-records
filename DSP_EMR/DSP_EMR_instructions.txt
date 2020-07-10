@@ -1,0 +1,8 @@
+Step 1: download MIMIC dataset files
+Step 2: anaconda prompt cd to DSP_EMR dir and activate dsp_emr env
+Step 3: run <python unpack_mimic.py -v>  ~ 60 sec
+Step 4: run <python createCCSdict.py> ~ 1 sec
+Step 5: run <python process_mimic.py -a "ADMISSIONS.csv" -d "DIAGNOSES_ICD.csv" -o "FILENAME" -v> ~ 60 sec
+Step 6: run <python doctorAI.py "FILENAME_seqs_visit" 4894 "FILENAME_seqs_label" 273 "FILENAME_model" --verbose> ~ 180 sec
+Step 7: run <python testDoctorAI.py "FILENAME_model.9.npz" "FILENAME_seqs_visit.test" "FILENAME_seqs_label.test" "[200,200]" --output_file "FILENAME_predictions" --verbose> ~ 30 sec
+Step 8: run <python translateCodesToText.py -c "FILENAME_label.types" -i "FILENAME_predictions.dat" -o "FILENAME_results" -v> ~ 5 sec
