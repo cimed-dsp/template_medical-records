@@ -1,7 +1,7 @@
 '''This script processes MIMIC-III dataset and builds longitudinal diagnosis records for patients with at least two visits.
 The output data are cPickled, and suitable for training Doctor AI or RETAIN
 Written by Edward Choi (mp2893@gatech.edu)
-Usage: Put this script to the foler where MIMIC-III CSV files are located. Then execute the below command.
+Usage: Put this script to the folder where MIMIC-III CSV files are located. Then execute the below command.
 python process_mimic.py ADMISSIONS.csv DIAGNOSES_ICD.csv <output file> 
 
 -inputs:
@@ -21,6 +21,8 @@ python process_mimic.py ADMISSIONS.csv DIAGNOSES_ICD.csv <output file>
 # -added train, valid, test splitting by 60/20/20 fixed percentages
 # -imports ccs code dictionary with 'CCS code' (key) : [ICD9 codes...] (value)
 '''
+
+TODO REPLACE HARDCODED PATHS
 
 
 import sys
@@ -57,6 +59,7 @@ def convert_to_3digit_icd9(dxStr):
 def main(admissionFile, diagnosisFile, outFile):
 	# load in dictionary with ccs code keys and ICD9 code values
 	try: 
+		TODO REPLACE HARDCODED PATH
 		with open('dxref2015.dat', 'rb') as ccs_icd_file:
 			icd_ccs_dx = pickle.load(ccs_icd_file)
 		logging.debug("Loaded ccs file containing icd9 codes.")
@@ -213,6 +216,7 @@ def main(admissionFile, diagnosisFile, outFile):
 	# pickle.dump(dates, open(outFile+'.dates', 'wb'), -1)
 	# pickle.dump(newSeqs, open(outFile+'.seqs', 'wb'), -1)
 	
+	TODO REPLACE HARDCODED PATHS?
 	pickle.dump(types, open(outFile+'_visit.types', 'wb'), 2)
 	pickle.dump(ccs_types, open(outFile+'_label.types', 'wb'), 2)
 	logging.info(f"# visit codes:{len(types)}, # label codes:{len(ccs_types)}")

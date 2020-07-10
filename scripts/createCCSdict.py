@@ -45,11 +45,13 @@ def get_code_mapping(ccsfile):
 		print(ccs_map[1][:10])
 		
 	# output as pickled dict to be read in and used to 'translate' diagnosis codes in doctorai
+	TODO TAKE OUTPUT FILES AS ARGS?
 	with open(output+'.dat', 'wb') as outfile, open(output+'_text.dat', 'wb') as outtext:
 		pickle.dump(ccs_map, outfile, 2)
 		pickle.dump(ccs_translation, outtext, 2)
 		
 if __name__ == '__main__':	
+	TODO REMOVE DEFAULTS
 	ccs_files = ['dxref2015.csv', 'prref2015.csv']
 	for ccs_file in ccs_files:
 		get_code_mapping(ccs_file)

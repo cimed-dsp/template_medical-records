@@ -184,6 +184,7 @@ def padMatrixWithoutTime(seqs, options):
 	
 	return x, mask, lengths
 
+TODO REMOVE DEFAULTS?
 def test_doctorAI(
 	modelFile='model.txt',
 	seqFile='seq.txt',
@@ -326,6 +327,8 @@ if __name__ == '__main__':
 	if args.output_file:
 		logging.debug("saving inputs and predictions as Pickled dict...")
 		try:
+			TODO REMOVE HARDCODED PATH?
+			TODO STORE AS JSON?
 			with open(args.output_file+'.dat', 'wb') as outFile:
 				pickle.dump({"inputs":inputs, "predictions":predictions}, outFile)
 				logging.debug(f"preview:\n\t inputs: \n{'...'.join(' '.join(map(str, sub)) for sub in inputs[:3])} \n\t predicted: \n{'...'.join(' '.join(map(str, sub)) for sub in predictions[:3])}")

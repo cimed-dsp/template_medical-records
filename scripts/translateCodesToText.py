@@ -59,6 +59,7 @@ def outputTextCodes(ccs_codes):
 	'''
 	logging.debug("opening ccs text dict...")
 	try: 
+		TODO REMOVE HARDCODED PATH?
 		with open('dxref2015_text.dat', 'rb') as ccs_text_file:
 			ccs_text_dx = pickle.load(ccs_text_file)
 		logging.debug("loaded ccs file containing text descriptions.")

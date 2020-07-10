@@ -25,7 +25,7 @@ The outputs:
 	ICD9 codes together into CCS codes, which represent categories 
 	of ICD9 codes. This shrinks the memory footprint significantly,
 	as ~5000 ICD9 codes become just ~275 CCS codes.  We do, however, lose the
-	specificity in teh model by doing this.  Although with the limited 
+	specificity in the model by doing this.  Although with the limited 
 	pre-processing of this model, predicting CCS codes should be fine-grained
 	enough for what we expect the model to do.
 '''
@@ -384,6 +384,7 @@ def calculate_auc(test_model, dataset, options):
 		dataCount += float(len(batchX))
 	return aucSum / dataCount
 
+TODO REMOVE DEFAULT VALUES
 def train_doctorAI(
 	seqFile='seqFile.txt',
 	inputDimSize=20000,
