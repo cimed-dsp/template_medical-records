@@ -65,7 +65,7 @@ TODO create public repo
 
     ``` bash
     sh setup/install-conda.sh
-    conda env create -f dsp_emr_environment.yml
+    conda env create -f dsp-emr-environment.yml
     conda activate dsp_emr
     ```
 
@@ -79,10 +79,8 @@ open https://physionet.org/content/mimiciii/1.4/ in browser
 near top-right corner, if you see "Account", click to expand menu and select Login; enter credentials; you'll be redirected to a different page; go back to URL above
 Once there, scroll to the bottom to the “Files” section. If the page shows a restricted-access warning, you need to get access to MIMIC-III or sign the data use agreement for this project. Otherwise, you should see the following:
 
-
-wget -r -N -c -np --user mjberry --ask-password https://physionet.org/files/mimiciii/1.4/
     ``` bash
-    wget --user [username] --ask-password -O mimic-iii-clinical-database-1.4.zip \
+    wget --user [username] --ask-password -O data/mimic/mimic-iii-clinical-database-1.4.zip \
         https://physionet.org/content/mimiciii/get-zip/1.4/
     md5sum mimic-iii-clinical-database-1.4.zip
     # a3eb25060b7dc0843fe2235d81707552  mimic-iii-clinical-database-1.4.zip
@@ -90,40 +88,40 @@ wget -r -N -c -np --user mjberry --ask-password https://physionet.org/files/mimi
 
 5. Extract the ADMISSIONS and DIAGNOSES_ICD tables from the MIMIC-III zip file to the current directory.
 
-unzip -l mimic-iii-clinical-database-1.4.zip
+unzip -l data/mimic/mimic-iii-clinical-database-1.4.zip
 
-unzip -p mimic-iii-clinical-database-1.4.zip mimic-iii-clinical
--database-1.4/ADMISSIONS.csv.gz  | gunzip > data/ADMISSIONS.csv
+unzip -p data/mimic/mimic-iii-clinical-database-1.4.zip mimic-iii-clinical
+-database-1.4/ADMISSIONS.csv.gz  | gunzip > data/mimic/ADMISSIONS.csv
 
+again for DIAGNOSES_ICD.csv
 
-
-    ``` bash
-    python unpack_mimic.py -n data/ -v
-    ```
 
 6. Create dictionaries that map between Clinical Classifications Software (CCS) codes and ICD-9 codes diagnoses (`dxref2015.csv`) and procedures (`prref2015.csv`). The mapping data is derived from [here](https://www.hcup-us.ahrq.gov/toolssoftware/ccs/ccs.jsp)
 
     ``` bash
-    python createCCSdict.py
+    python3 scripts/create_ccs_dict.py data/ccs/dxref2015.csv data/ccs/ 2
+    python3 scripts/create_ccs_dict.py data/ccs/prref2015.csv data/ccs/ 2
     ```
+
+    Look in data/ccs/ for the newly created files, which will have the `.json` extension. Compare the contents of these files with the source `.cvs` files in the same directory. Understand how the `.json` files are structured and how their contents are related to the source `.csv` files.
 
 7. Create training, testing, and validation sets of inputs to DoctorAI by reading in visit data, mapping diagnosis codes, partition the patients between sets, and for each set, printing out object files that contain patient ids (`_pids.*`), patient visit dates (`_dates.*`), diagnostic codes (`_seqs_visit.*`) and their labels (`_seqs_labels.*`) per patient visit
 
     ``` bash
-    python process_mimic.py -a ADMISSIONS.csv -d DIAGNOSES_ICD.csv -o processed_data -v
+    python3 process_mimic.py -a ADMISSIONS.csv -d DIAGNOSES_ICD.csv -o processed_data -v
     ```
 
-8. Train DoctorAI model that take in 4894 diagnostic codes of one visit and predict 273 CCS codes for the next visit for 10 epochs. Use `python doctorAI.py -h` for more details about the default structure of the model.
+8. Train DoctorAI model that take in 4894 diagnostic codes of one visit and predict 273 CCS codes for the next visit for 10 epochs. Use `python3 doctorAI.py -h` for more details about the default structure of the model.
 
     ``` bash
-    python doctorAI.py processed_data_seqs_visit 4894 processed_data_seqs_label 273 \
+    python3 doctorAI.py processed_data_seqs_visit 4894 processed_data_seqs_label 273 \
         model_processed_data --verbose
     ```
 
 9. Predict top 30 CCS codes for the subsequent visits for the patients in the test set
 
     ``` bash
-    python testDoctorAI.py model_processed_data.9.npz \
+    python3 testDoctorAI.py model_processed_data.9.npz \
         processed_data_seqs_visit.test processed_data_seqs_label.test \
         [200,200] --output_file predictions_processed_data.test --verbose
     ```
@@ -131,7 +129,7 @@ unzip -p mimic-iii-clinical-database-1.4.zip mimic-iii-clinical
 10. Convert prediction data object into two readable files of CCS codes, the top 30 predicted codes (`*.csv`) and the observed CCS codes that occurred (`*_actual.csv.`)
 
     ``` bash
-    python translateCodesToText.py -c processed_data_label.types \
+    python3 translateCodesToText.py -c processed_data_label.types \
         -i predictions_processed_data.test.dat -o results_processed_data.test -v
     ```
 
