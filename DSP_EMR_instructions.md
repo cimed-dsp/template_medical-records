@@ -12,6 +12,9 @@ Create environment button
 
 
 
+if at any point you see a logged out message in C9, open a separate tab, log in at aws.illinois.edu, then refresh the C9 tab
+
+
 
 ## Overview
 
@@ -24,15 +27,15 @@ This project will walk you through an implementation using EMR ICD-9 data codes 
 This project was built from the work detailed in:
 
 ``` text
-Doctor AI: Predicting Clinical Events via Recurrent Neural Networks  
-Edward Choi, Mohammad Taha Bahadori, Andy Schuetz, Walter F. Stewart, Jimeng Sun  
+Doctor AI: Predicting Clinical Events via Recurrent Neural Networks
+Edward Choi, Mohammad Taha Bahadori, Andy Schuetz, Walter F. Stewart, Jimeng Sun
 arXiv preprint arXiv:1511.05942
 ```
 
 ``` text
 Medical Concept Representation Learning from Electronic Health
-Records and its Application on Heart Failure Prediction  
-Edward Choi, Andy Schuetz, Walter F. Stewart, Jimeng Sun  
+Records and its Application on Heart Failure Prediction
+Edward Choi, Andy Schuetz, Walter F. Stewart, Jimeng Sun
 arXiv preprint arXiv:1602.03686
 ```
 
@@ -47,7 +50,6 @@ Create AWS C9. Following commands should be run from prompt in C9.
 1. Access your AWS C9 (needs Anaconda)
 
 OR REPLACE WITH LOCAL INSTALL?
-DOES THIS REPO EXIST?
     ``` bash
     docker run -i -t --rm --name my_anaconda3 -v $(pwd):/home/ubuntu/projects/ \
         -w /home/ubuntu/projects/ continuumio/anaconda3 /bin/bash
@@ -55,16 +57,16 @@ DOES THIS REPO EXIST?
 
 2. Clone and change to the EMR DSP code repository directory
 
+DOES THIS REPO EXIST?
     ``` bash
     git clone https://github.com/CICOM/EMR_DSP.git...
     cd EMR_DSP
     ```
-git clone https://github.com/mp2893/doctorai.git
 
 3. Download MIMIC dataset files with your credentialed physionet `[username]` and `[password]`
 
 open https://physionet.org/content/mimiciii/1.4/ in browser
-near top-right corner, if you see "Account", click to expand menu and select Login; enter credentials; you'll be redirected to a different page; go back to URL above 
+near top-right corner, if you see "Account", click to expand menu and select Login; enter credentials; you'll be redirected to a different page; go back to URL above
 Once there, scroll to the bottom to the “Files” section. If the page shows a restricted-access warning, you need to get access to MIMIC-III or sign the data use agreement for this project. Otherwise, you should see the following:
 
 
@@ -82,9 +84,16 @@ wget -r -N -c -np --user mjberry --ask-password https://physionet.org/files/mimi
     conda env create -f dsp_emr_environment.yml
     conda activate dsp_emr
     ```
-Note (dsp_emr) left of prompt. If you open a new console, will need to active again.
+Note (dsp_emr) left of prompt. If you open a new console, will need to activate again.
 
 5. Extract the ADMISSIONS and DIAGNOSES_ICD tables from the MIMIC-III zip file to the current directory.
+
+unzip -l mimic-iii-clinical-database-1.4.zip
+
+unzip -p mimic-iii-clinical-database-1.4.zip mimic-iii-clinical
+-database-1.4/ADMISSIONS.csv.gz  | gunzip > data/ADMISSIONS.csv
+
+
 
     ``` bash
     python unpack_mimic.py -n data/ -v
@@ -126,7 +135,7 @@ Note (dsp_emr) left of prompt. If you open a new console, will need to active ag
 
 ## Extensions
 
-The ways in which you could extend this include modifying this model to predict timing of events or to predict a specific type of diagnosis only, or extending it to predict drug and procedure events in addition to diagnostics.  
+The ways in which you could extend this include modifying this model to predict timing of events or to predict a specific type of diagnosis only, or extending it to predict drug and procedure events in addition to diagnostics.
 
 MANAGING C9 COSTS; HIBERNATION
 UPLOADING AND DOWNLOADING FILES
