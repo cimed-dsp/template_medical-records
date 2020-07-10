@@ -47,23 +47,33 @@ And uses the codebase developed and available here:
 
 Create AWS C9. Following commands should be run from prompt in C9.
 
-1. Access your AWS C9 (needs Anaconda)
+1. Clone and change to the EMR DSP code repository directory
 
-OR REPLACE WITH LOCAL INSTALL?
+TODO create public repo
     ``` bash
-    docker run -i -t --rm --name my_anaconda3 -v $(pwd):/home/ubuntu/projects/ \
-        -w /home/ubuntu/projects/ continuumio/anaconda3 /bin/bash
+    git clone https://github.com/CICOM/DSP-EMR.git...
+    cd DSP-EMR
     ```
 
-2. Clone and change to the EMR DSP code repository directory
+2. Expand the disk attached to your C9. The command below will reserve 40 GB of storage, which will be enough for the template project and perhaps enough for your independent project, too. If you later find you need more storage, you can run this command again, replacing 40 with the number of gigabytes you need.
 
-DOES THIS REPO EXIST?
-    ``` bash
-    git clone https://github.com/CICOM/EMR_DSP.git...
-    cd EMR_DSP
+    ```bash
+    sh setup/resize-disk.sh 40
     ```
 
-3. Download MIMIC dataset files with your credentialed physionet `[username]` and `[password]`
+3. Install the code dependencies using Anaconda.
+
+    ``` bash
+    sh setup/install-conda.sh
+    conda env create -f dsp_emr_environment.yml
+    conda activate dsp_emr
+    ```
+
+    At this point, you should see `(dsp_emr)` appear on the left side of your command prompt.
+
+    If at any point you open a new terminal in C9, you will need to run `conda activate dsp_emr` before running any of the files in the `scripts/` directory.
+
+4. Download MIMIC dataset files with your credentialed physionet `[username]` and `[password]`
 
 open https://physionet.org/content/mimiciii/1.4/ in browser
 near top-right corner, if you see "Account", click to expand menu and select Login; enter credentials; you'll be redirected to a different page; go back to URL above
@@ -77,14 +87,6 @@ wget -r -N -c -np --user mjberry --ask-password https://physionet.org/files/mimi
     md5sum mimic-iii-clinical-database-1.4.zip
     # a3eb25060b7dc0843fe2235d81707552  mimic-iii-clinical-database-1.4.zip
     ```
-
-4. Activate the Anaconda environment
-
-    ``` bash
-    conda env create -f dsp_emr_environment.yml
-    conda activate dsp_emr
-    ```
-Note (dsp_emr) left of prompt. If you open a new console, will need to activate again.
 
 5. Extract the ADMISSIONS and DIAGNOSES_ICD tables from the MIMIC-III zip file to the current directory.
 
