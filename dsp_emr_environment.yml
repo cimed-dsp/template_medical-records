@@ -1,0 +1,34 @@
+name: dsp_emr
+channels:
+  - anaconda
+  - conda-forge
+  - defaults
+dependencies:
+  - ca-certificates=2019.11.28
+  - certifi=2019.11.28
+  - cffi=1.13.2
+  - cryptography=2.8
+  - idna=2.8
+  - intel-openmp=2020.0
+  - libblas=3.8.0
+  - libcblas=3.8.0
+  - libgpuarray=0.7.6
+  - liblapack=3.8.0
+  - mako=1.1.0
+  - markupsafe=1.1.1
+  - mkl=2019.4
+  - numpy=1.18.1
+  - openssl=1.1.1d
+  - pip=20.0.2
+  - pycparser=2.19
+  - pygpu=0.7.6
+  - pyopenssl=19.1.0
+  - pysocks=1.7.1
+  - python=3.8.1
+  - scipy=1.3.2
+  - setuptools=45.1.0
+  - six=1.14.0
+  - sqlite=3.30.1
+  - theano=1.0.4
+  - urllib3=1.25.7
+  - wheel=0.34.2
