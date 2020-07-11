@@ -108,7 +108,7 @@ again for DIAGNOSES_ICD.csv
 7. Create training, testing, and validation sets of inputs to DoctorAI by reading in visit data, mapping diagnosis codes, partition the patients between sets, and for each set, printing out object files that contain patient ids (`_pids.*`), patient visit dates (`_dates.*`), diagnostic codes (`_seqs_visit.*`) and their labels (`_seqs_labels.*`) per patient visit
 
     ``` bash
-    python3 process_mimic.py -a ADMISSIONS.csv -d DIAGNOSES_ICD.csv -o processed_data -v
+    python3 scripts/process_mimic.py data/mimic/ADMISSIONS.csv data/mimic/DIAGNOSES_ICD.csv data/ccs/dxref2015.json data/mimic/
     ```
 
 8. Train DoctorAI model that take in 4894 diagnostic codes of one visit and predict 273 CCS codes for the next visit for 10 epochs. Use `python3 doctorAI.py -h` for more details about the default structure of the model.

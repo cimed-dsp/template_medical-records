@@ -28,20 +28,32 @@ python process_mimic.py ADMISSIONS.csv DIAGNOSES_ICD.csv <output file>
 # -added train, valid, test splitting by 60/20/20 fixed percentages
 # -imports ccs code dictionary with 'CCS code' (key) : [ICD9 codes...] (value)
 # Edited 7/10/2020 Matt Berry
-# - delinted
+# -delinted
+# -switched to argparse
+# -dumped to json instead of pickle
 '''
 
-import sys
-try:
-    import cPickle as pickle
-except ModuleNotFoundError:
-    import pickle
+import argparse
 from datetime import datetime
-import getopt
+import json
 import logging
 import os
 
 import numpy as np
+
+def json_encoder(obj):
+    return_val = None
+    if isinstance(obj, np.integer):
+        return_val = int(obj)
+    elif isinstance(obj, np.floating):
+        return_val = float(obj)
+    elif isinstance(obj, np.ndarray):
+        return_val = obj.tolist()
+    elif isinstance(obj, datetime):
+        return_val = obj.isoformat()
+    else:
+        raise TypeError
+    return return_val
 
 def convert_to_icd9(dx_str):
     return_val = None
@@ -71,15 +83,11 @@ def convert_to_3digit_icd9(dx_str):
             return_val = dx_str
     return return_val
 
-def process(admission_file, diagnosis_file, out_file):
+def process(admission_file, diagnosis_file, ccs_map_file, out_dir):
     # load in dictionary with ccs code keys and ICD9 code values
-    try:
-        with open('dxref2015.dat', 'rb') as ccs_icd_file:
-            icd_ccs_dx = pickle.load(ccs_icd_file)
-        logging.debug("Loaded ccs file containing icd9 codes.")
-    except FileNotFoundError:
-        logging.error("Need 'dxref2015.dat' in directory: %s", os.getcwd())
-        sys.exit(1)
+    with open(ccs_map_file, 'r') as ccs_icd_file:
+        icd_ccs_dx = json.load(ccs_icd_file)
+    logging.debug("Loaded ccs file containing icd9 codes.")
 
     logging.info('Building pid-admission mapping, admission-date mapping')
     pid_adm_map = {}
@@ -154,7 +162,7 @@ def process(admission_file, diagnosis_file, out_file):
             # code level (int)
             for code in visit:
                 # translate a D_###.## ICD9 code to ### CCS code
-                ccs_code = [k for k, v in icd_ccs_dx.items()
+                ccs_code = [int(k) for k, v in icd_ccs_dx.items()
                             if code[2:].replace('.', '') in v]
                 if not ccs_code:
                     logging.info('Could not find code %s in CCS dict.', code)
@@ -181,16 +189,17 @@ def process(admission_file, diagnosis_file, out_file):
 
     ### seqs = [patient[visit[], visit[]...], patient[visit[]...]]
     # get random permutation of pids
-    indeces = np.random.permutation(len(pids))
+    np.random.seed(12345)
+    indices = np.random.permutation(len(pids))
     # split into three groups approximately 60%, 20%, 20%
     ind_train = len(pids)*3//5
     ind_valid = ind_train + (len(pids) - ind_train)//2
     # test is whatever is left (through to end of list)
 
-    # get indeces for each group
-    train = indeces[:ind_train]
-    valid = indeces[ind_train:ind_valid]
-    tests = indeces[ind_valid:]
+    # get indices for each group
+    train = indices[:ind_train]
+    valid = indices[ind_train:ind_valid]
+    tests = indices[ind_valid:]
 
     # get broken out lists of pids
     pids_arr = np.array(pids)
@@ -221,82 +230,75 @@ def process(admission_file, diagnosis_file, out_file):
     te_labl = list(labl_arr[tests])
     del labl_arr
 
-
-
-    # write pickle for train, valid and test arrays. These will be "visits"
+    # write outputs for train, valid and test arrays. These will be "visits"
     # write second copy of seqs, dates with CCS codes.  These will be "labels"
 
-
-    # pickle.dump(pids, open(out_file+'.pids', 'wb'), -1)
-    # pickle.dump(dates, open(out_file+'.dates', 'wb'), -1)
-    # pickle.dump(new_seqs, open(out_file+'.seqs', 'wb'), -1)
-
-    pickle.dump(types, open(out_file+'_visit.types', 'wb'), 2)
-    pickle.dump(ccs_types, open(out_file+'_label.types', 'wb'), 2)
+    with open(os.path.join(out_dir, 'visit_types.json'), 'w', encoding='utf8') as outfile:
+        json.dump(types, outfile, indent=2, default=json_encoder)
+    with open(os.path.join(out_dir, 'label_types.json'), 'w', encoding='utf8') as outfile:
+        json.dump(ccs_types, outfile, indent=2, default=json_encoder)
     logging.info("# visit codes: %d, # label codes: %d", len(types), len(ccs_types))
 
+    with open(os.path.join(out_dir, 'pids.train.json'), 'w', encoding='utf8') as outfile:
+        json.dump(tr_pids, outfile, indent=2, default=json_encoder)
+    with open(os.path.join(out_dir, 'pids.valid.json'), 'w', encoding='utf8') as outfile:
+        json.dump(va_pids, outfile, indent=2, default=json_encoder)
+    with open(os.path.join(out_dir, 'pids.test.json'), 'w', encoding='utf8') as outfile:
+        json.dump(te_pids, outfile, indent=2, default=json_encoder)
 
-    pickle.dump(tr_pids, open(out_file+'_pids.train', 'wb'), 2)
-    pickle.dump(va_pids, open(out_file+'_pids.valid', 'wb'), 2)
-    pickle.dump(te_pids, open(out_file+'_pids.test', 'wb'), 2)
+    with open(os.path.join(out_dir, 'seqs_visit.train.json'), 'w', encoding='utf8') as outfile:
+        json.dump(tr_seqs, outfile, indent=2, default=json_encoder)
+    with open(os.path.join(out_dir, 'seqs_visit.valid.json'), 'w', encoding='utf8') as outfile:
+        json.dump(va_seqs, outfile, indent=2, default=json_encoder)
+    with open(os.path.join(out_dir, 'seqs_visit.test.json'), 'w', encoding='utf8') as outfile:
+        json.dump(te_seqs, outfile, indent=2, default=json_encoder)
 
-    pickle.dump(tr_seqs, open(out_file+'_seqs_visit.train', 'wb'), 2)
-    pickle.dump(va_seqs, open(out_file+'_seqs_visit.valid', 'wb'), 2)
-    pickle.dump(te_seqs, open(out_file+'_seqs_visit.test', 'wb'), 2)
+    with open(os.path.join(out_dir, 'date.train.json'), 'w', encoding='utf8') as outfile:
+        json.dump(tr_date, outfile, indent=2, default=json_encoder)
+    with open(os.path.join(out_dir, 'date.valid.json'), 'w', encoding='utf8') as outfile:
+        json.dump(va_date, outfile, indent=2, default=json_encoder)
+    with open(os.path.join(out_dir, 'date.test.json'), 'w', encoding='utf8') as outfile:
+        json.dump(te_date, outfile, indent=2, default=json_encoder)
 
-    pickle.dump(tr_date, open(out_file+'_date.train', 'wb'), 2)
-    pickle.dump(va_date, open(out_file+'_date.valid', 'wb'), 2)
-    pickle.dump(te_date, open(out_file+'_date.test', 'wb'), 2)
+    with open(os.path.join(out_dir, 'seqs_label.train.json'), 'w', encoding='utf8') as outfile:
+        json.dump(tr_labl, outfile, indent=2, default=json_encoder)
+    with open(os.path.join(out_dir, 'seqs_label.valid.json'), 'w', encoding='utf8') as outfile:
+        json.dump(va_labl, outfile, indent=2, default=json_encoder)
+    with open(os.path.join(out_dir, 'seqs_label.test.json'), 'w', encoding='utf8') as outfile:
+        json.dump(te_labl, outfile, indent=2, default=json_encoder)
 
-    pickle.dump(tr_labl, open(out_file+'_seqs_label.train', 'wb'), 2)
-    pickle.dump(va_labl, open(out_file+'_seqs_label.valid', 'wb'), 2)
-    pickle.dump(te_labl, open(out_file+'_seqs_label.test', 'wb'), 2)
+def parse_arguments(parser):
+    parser.add_argument(\
+        'admission_file',
+        type=str,
+        help='The path to the admission file from the MIMIC database.')
+    parser.add_argument(\
+        'diagnosis_file',
+        type=str,
+        help='The path to the diagnosis file from the MIMIC database.')
+    parser.add_argument(\
+        'ccs_map_file',
+        type=str,
+        help='The path to the mapping from ICD to CCS codes in JSON format.')
+    parser.add_argument(\
+        'out_dir',
+        type=str,
+        help='The path to the output directory.')
+    parser.add_argument('-v', '--verbose', action='store_true',\
+        help='Show verbose output.')
+    args = parser.parse_args()
+    return args
 
 def main():
-    argv = sys.argv[1:]
-    admission_file = ""
-    diagnosis_file = ""
-    out_file = ""
-    isdebug = False
-    try:
-        opts, args = getopt.getopt(argv, "hva:d:o:", ["help", "verbose",\
-            "admission_file=", "diagnosis_file=", "out_file="])
-    except getopt.GetoptError:
-        print('process_mimic.py -a <name of admission file>'
-              '-d <name of diagnosis file> '
-              '-o <name of output files> '
-              '-v <verbose output> ')
-        sys.exit(2)
-    for opt, arg in opts:
-        if opt == '-h':
-            print('process_mimic.py -a <name of admission file>'
-                  '-d <name of diagnosis file> '
-                  '-o <name of output files> '
-                  '-v <verbose output> ')
-            sys.exit()
-        elif opt in ("-a", "--admission"):
-            admission_file = arg
-        elif opt in ("-d", "--diagnosis"):
-            diagnosis_file = arg
-        elif opt in ("-o", "--output"):
-            out_file = arg
-        elif opt in ("-v", "--verbose"):
-            isdebug = True
-            logging.basicConfig(level=logging.DEBUG)
-            logging.warning("Set logging to debug.")
-    if not isdebug:
+    parser = argparse.ArgumentParser()
+    args = parse_arguments(parser)
+    if args.verbose:
+        logging.basicConfig(level=logging.DEBUG)
+        logging.warning("Set logging to debug.")
+    else:
         logging.basicConfig(level=logging.INFO)
 
-    if not all((admission_file, diagnosis_file, out_file)):
-        logging.error("Must provide an admission file, a diagnosis file, "
-                      "and an output file name!")
-        print('process_mimic.py -a <name of admission file>'
-              '-d <name of diagnosis file> '
-              '-o <name of output files> '
-              '-v <verbose output> ')
-        sys.exit(2)
-
-    process(admission_file, diagnosis_file, out_file)
+    process(args.admission_file, args.diagnosis_file, args.ccs_map_file, args.out_dir)
 
 if __name__ == '__main__':
     main()
