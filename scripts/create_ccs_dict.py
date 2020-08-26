@@ -25,7 +25,7 @@ def get_code_mapping(in_file, out_dir, n_header_rows):
     with open(in_file, 'r') as ref:
         # throw away headers
         for header in range(n_header_rows):
-            throw = ref.readline()
+            ref.readline()
 
         # for each ccs code, create list of icd9 codes that map to it
         for line in ref:
@@ -36,7 +36,6 @@ def get_code_mapping(in_file, out_dir, n_header_rows):
             else:
                 ccs_map[int(ccs)] = [icd.strip()]
                 ccs_translation[int(ccs)] = str(ccs_description)
-        ccs_codes = list(ccs_map.keys())
 
     # output as dict to be read in and used to 'translate' diagnosis codes in doctorai
     basename = os.path.splitext(os.path.basename(in_file))[0]
