@@ -74,7 +74,7 @@ Run the following (again, the `. ` at the beginning of the first line is require
     conda env create -f setup/dsp-emr-environment.yml
     conda activate dsp_emr
 
-You should now see `(dsp_emr)` appear on the left side of your command prompt.
+You should now see `(dsp_emr)` appear on the left side of your command prompt. (You might notice the command output advises you to close and re-open your current shell, but as long as you see `(dsp_emr)` on the left side of your command prompt, you can ignore the message.)
 
 **If at any point you open a new terminal in Cloud9, or if your Cloud9 environment is restarted after hibernation, you will need to run `conda activate dsp_emr` before running any of the files in the `scripts/` directory.**
 
