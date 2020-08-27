@@ -1,26 +1,10 @@
 # Electronic Medical Records DSP
 
-
-https://us-west-2.console.aws.amazon.com/cloud9/home/create
-Give name (e.g., <netid>-emr)
-Next step button
-
-Change Platform to Ubuntu Server 18.04 LTS; otherwise, accept defaults (create new ec2 instance, t2.micro, 30 min hibernate, awsserviceroleforawscloud9)
-Next step button
-
-Create environment button
-
-
-
-if at any point you see a logged out message in C9, open a separate tab, log in at aws.illinois.edu, then refresh the C9 tab
-
-
-
 ## Overview
 
-This project uses the MIMIC-III dataset, which is freely available, but requires credentialling through CITI and MIT.  If you have not already completed the process to get access to the database, see physionet [https://physionet.org/content/mimiciii/1.4/](https://physionet.org/content/mimiciii/1.4/), you need to complete that before you can run this project.
+This project uses the MIMIC-III dataset, which is freely available, but requires credentialling through CITI and MIT.  If you have not already completed the process to get access to the database, see [https://physionet.org/content/mimiciii/1.4/](PhysioNet).
 
-This project will walk you through an implementation using EMR ICD-9 data codes from the MIMIC dataset to predict future hospital events. Specifically, it uses the ADMISSIONS.csv files which contain diagnosis codes.  Additional codes in the MIMIC dataset include procedure and drug codes.
+This project will walk you through an implementation using EMR ICD-9 data codes from the MIMIC dataset to predict future hospital events. Specifically, it uses the ADMISSIONS.csv and DIAGNOSES_ICD.csv files, which contain diagnosis codes.  Additional codes in the MIMIC dataset include procedure and drug codes.
 
 ## Resources
 
@@ -41,62 +25,88 @@ arXiv preprint arXiv:1602.03686
 
 And uses the codebase developed and available here:
 [https://github.com/mp2893/doctorai](https://github.com/mp2893/doctorai)
-(PROCEDURE BELOW WILL COPY A VERSION OF THIS CODE)
+(The procedure below will copy a different version of this code.)
 
 ## Tutorial
 
-Create AWS C9. Following commands should be run from prompt in C9.
+1. Create your Cloud9 environment.
 
-1. Clone and change to the EMR DSP code repository directory
+   In your browser, open the [https://aws.illinois.edu](AWS at Illinois) page and sign in. Once you are redirected to AWS, open the [https://us-east-2.console.aws.amazon.com/cloud9/home/create](Cloud9 creation form).
 
-TODO create public repo
+   On the first page of the form, give your Cloud9 environment a name (e.g., `<your-net-id>-emr`). Enter a description if you like. Press the "Next step" button.
+
+   On the second page of the form, use default values for all sections except "Platform", which you should change to "Ubuntu Server 18.04 LTS". Press the "Next step" button.
+
+   On the third page of the form, scroll to the bottom and press the "Create environment" button. **FIXME** click "Open IDE" button to open.
+
+   Inside your Cloud9 environment, you will see a panel on the left that shows your files. You can upload a file from your computer by dragging it over this panel and dropping it into the desired folder. You can download a file to your computer by right-clicking on its name and selecting "Download" from the menu that appears. Double-clicking a file will open it for editing in a tab on the right side of the screen. You'll also have a tab on the right side of the screen that contains a terminal with a command prompt, and you can add more terminal tabs using the green plus icon that appears in the tab bar.
+   
+   Your Cloud9 environment will hibernate if idle for more than 30 minutes or if your AWS session expires. This reduces costs and keeps your Cloud9 environment secure. Whenever your Cloud9 environment hibernates, you can resume the session by doing the following: In a new tab, sign in at [https://aws.illinois.edu](AWS at Illinois). You will be redirected to an AWS page that includes a link to Cloud9 FIXME. Click the "Cloud9" link and then click "Open IDE" on the next page. At this point, you can close your old Cloud9 tab. In your restarted Cloud9 environment, your files will be restored exactly as they were, but any terminal tabs will be restarted. You will probably want to change back to your previous working directory (e.g., for the tutorial, `cd dsp_emr`) and reactivate your conda environment (`conda activate dsp_emr`).
+
+   When you no longer need your Cloud9 environment, make sure you have another copy of all of your files, and then return to [https://us-east-2.console.aws.amazon.com/cloud9/home/](Cloud9 on AWS), press the "Delete" button, and FIXME.
+
+   Commands in the following steps should be run from the prompt in a terminal tab in your Cloud9 environment.
+
+2. Clone the code repository and change your working directory.
+
     ``` bash
-    git clone https://github.com/CICOM/DSP-EMR.git...
-    cd DSP-EMR
+    git clone git@bitbucket.org:arivisualanalytics/dsp_emr.git
+    cd dsp_emr
     ```
 
-2. Expand the disk attached to your C9. The command below will reserve 40 GB of storage, which will be enough for the template project and perhaps enough for your independent project, too. If you later find you need more storage, you can run this command again, replacing 40 with the number of gigabytes you need.
+3. Expand the disk attached to your Cloud9 environment. The command below will reserve 40 GB of storage, which will be enough for the template project and perhaps enough for your independent project, too. If you later find you need more storage, you can run this command again, replacing 40 with the total number of gigabytes you need.
 
     ```bash
     sh setup/resize-disk.sh 40
     ```
 
-3. Install the code dependencies using Anaconda.
+4. Install the code dependencies using Anaconda.
 
     ``` bash
     sh setup/install-conda.sh
-    conda env create -f dsp-emr-environment.yml
+    conda env create -f setup/dsp-emr-environment.yml
     conda activate dsp_emr
     ```
 
-    At this point, you should see `(dsp_emr)` appear on the left side of your command prompt.
+    You should now see `(dsp_emr)` appear on the left side of your command prompt.
 
-    If at any point you open a new terminal in C9, you will need to run `conda activate dsp_emr` before running any of the files in the `scripts/` directory.
+    **If at any point you open a new terminal in Cloud9, or if your Cloud9 environment is restarted after hibernation, you will need to run `conda activate dsp_emr` before running any of the files in the `scripts/` directory.**
 
-4. Download MIMIC dataset files with your credentialed physionet `[username]` and `[password]`
+5. Download MIMIC dataset files with your PhysioNet `[username]` and `[password]`.
 
-open https://physionet.org/content/mimiciii/1.4/ in browser
-near top-right corner, if you see "Account", click to expand menu and select Login; enter credentials; you'll be redirected to a different page; go back to URL above
-Once there, scroll to the bottom to the “Files” section. If the page shows a restricted-access warning, you need to get access to MIMIC-III or sign the data use agreement for this project. Otherwise, you should see the following:
+   First, confirm that you have access to MIMIC by opening [https://physionet.org/content/mimiciii/1.4/](https://physionet.org/content/mimiciii/1.4/) in your browser.
+   
+   Look near the top-right corner of the screen, to the left of the "Search" box. If you see your username, you can skip to the next paragraph. Otherwise, if you see "Account", click it to expand the menu and select "Login". Enter your credentials. You will be redirected to a different page, showing your projects. Return to [https://physionet.org/content/mimiciii/1.4/](https://physionet.org/content/mimiciii/1.4/).
+   
+   Scroll to the "Files" section of the page. If you see a restricted-access warning, you still need to get access to MIMIC-III or sign the data use agreement for this project. Otherwise, you can run the following in your Cloud9 environment, replacing `[username]` with your PhysioNet username and entering your PhysioNet password when prompted:
 
     ``` bash
     wget --user [username] --ask-password -O data/mimic/mimic-iii-clinical-database-1.4.zip \
         https://physionet.org/content/mimiciii/get-zip/1.4/
-    md5sum mimic-iii-clinical-database-1.4.zip
-    # a3eb25060b7dc0843fe2235d81707552  mimic-iii-clinical-database-1.4.zip
     ```
 
-5. Extract the ADMISSIONS and DIAGNOSES_ICD tables from the MIMIC-III zip file to the current directory.
+    To confirm the download was successful, run the following command. It should produce "a3eb25060b7dc0843fe2235d81707552" as output.
 
-unzip -l data/mimic/mimic-iii-clinical-database-1.4.zip
+    ``` bash
+    md5sum data/mimic/mimic-iii-clinical-database-1.4.zip
+    ```
 
-unzip -p data/mimic/mimic-iii-clinical-database-1.4.zip mimic-iii-clinical
--database-1.4/ADMISSIONS.csv.gz  | gunzip > data/mimic/ADMISSIONS.csv
+6. Extract the ADMISSIONS and DIAGNOSES_ICD tables from the MIMIC-III zip file to the data directory.
 
-again for DIAGNOSES_ICD.csv
+   In your Cloud9 environment, run the following:
 
+    ``` bash
+    unzip -p data/mimic/mimic-iii-clinical-database-1.4.zip mimic-iii-clinical-database-1.4/ADMISSIONS.csv.gz | gunzip > data/mimic/ADMISSIONS.csv
+    unzip -p data/mimic/mimic-iii-clinical-database-1.4.zip mimic-iii-clinical-database-1.4/DIAGNOSES_ICD.csv.gz | gunzip > data/mimic/DIAGNOSES_ICD.csv
+    ```
 
-6. Create dictionaries that map between Clinical Classifications Software (CCS) codes and ICD-9 codes diagnoses (`dxref2015.csv`) and procedures (`prref2015.csv`). The mapping data is derived from [here](https://www.hcup-us.ahrq.gov/toolssoftware/ccs/ccs.jsp)
+    Later, while working on your independent project, you might be interested in other tables from the MIMIC database. You can produce a list of them by running the following:
+
+    ``` bash
+    unzip -l data/mimic/mimic-iii-clinical-database-1.4.zip
+    ```
+
+7. Create mappings from Clinical Classifications Software (CCS) codes to ICD-9 codes diagnoses (`dxref2015.csv`) and procedures (`prref2015.csv`). The mapping data is derived from [Healthcare Cost and Utilization Project data](https://www.hcup-us.ahrq.gov/toolssoftware/ccs/ccs.jsp).
 
     ``` bash
     python3 scripts/create_ccs_dict.py data/ccs/dxref2015.csv data/ccs/ 2
@@ -105,38 +115,41 @@ again for DIAGNOSES_ICD.csv
 
     Look in data/ccs/ for the newly created files, which will have the `.json` extension. Compare the contents of these files with the source `.cvs` files in the same directory. Understand how the `.json` files are structured and how their contents are related to the source `.csv` files.
 
-7. Create training, testing, and validation sets of inputs to DoctorAI by reading in visit data, mapping diagnosis codes, partition the patients between sets, and for each set, printing out object files that contain patient ids (`_pids.*`), patient visit dates (`_dates.*`), diagnostic codes (`_seqs_visit.*`) and their labels (`_seqs_labels.*`) per patient visit
+8. Create training, testing, and validation inputs for DoctorAI. The `process_mimic.py` script reads visit data, maps diagnosis codes, and partitions the patients into sets; for each set, it will create files containing the patient ids (`pids.*`), patient visit dates (`date.*`), diagnostic codes (`seqs_visit.*`) and their labels (`seqs_labels.*`).
 
     ``` bash
-    python3 scripts/process_mimic.py data/mimic/ADMISSIONS.csv data/mimic/DIAGNOSES_ICD.csv data/ccs/dxref2015.json data/mimic/
+    python3 scripts/process_mimic.py data/mimic/ADMISSIONS.csv \
+        data/mimic/DIAGNOSES_ICD.csv data/ccs/dxref2015.json data/mimic/
     ```
 
-8. Train DoctorAI model that take in 4894 diagnostic codes of one visit and predict 273 CCS codes for the next visit for 10 epochs. Use `python3 doctorAI.py -h` for more details about the default structure of the model.
+9. Train a DoctorAI model that takes in 4894 diagnostic codes of one visit and predicts 273 CCS codes for the next visit. The training will use 10 epochs. `python3 scripts/doctor_ai.py -h` will print details about the default structure of the model. The `THEANO_FLAGS` portion of the command below suppresses a harmless warning message.
 
     ``` bash
-    python3 doctorAI.py processed_data_seqs_visit 4894 processed_data_seqs_label 273 \
-        model_processed_data --verbose
+    THEANO_FLAGS='optimizer_excluding=scanOp_pushout_output' python3 \
+        scripts/doctor_ai.py data/mimic/seqs_visit.train.json \
+        data/mimic/seqs_visit.test.json data/mimic/seqs_visit.valid.json \
+        4894 data/mimic/seqs_label.train.json data/mimic/seqs_label.test.json \
+        data/mimic/seqs_label.valid.json 273 data/mimic/model_processed_data --verbose
     ```
 
-9. Predict top 30 CCS codes for the subsequent visits for the patients in the test set
+10. Predict the top 30 CCS codes for the subsequent visits for the patients in the test set.
 
     ``` bash
-    python3 testDoctorAI.py model_processed_data.9.npz \
-        processed_data_seqs_visit.test processed_data_seqs_label.test \
-        [200,200] --output_file predictions_processed_data.test --verbose
+    python3 scripts/test_doctor_ai.py data/mimic/model_processed_data.9.npz \
+        data/mimic/seqs_visit.test.json data/mimic/seqs_label.test.json \
+        [200,200] --output_file data/mimic/predictions_processed_data.test.json --verbose
     ```
 
-10. Convert prediction data object into two readable files of CCS codes, the top 30 predicted codes (`*.csv`) and the observed CCS codes that occurred (`*_actual.csv.`)
+11. Convert the prediction outputs into two readable files of CCS codes, one containing the top 30 predicted codes (`results_processed_data.predictions.csv`) and the other containing the actual observed CCS codes (`results_processed_data.actuals.csv`).
 
     ``` bash
-    python3 translateCodesToText.py -c processed_data_label.types \
-        -i predictions_processed_data.test.dat -o results_processed_data.test -v
+    python3 scripts/translate_codes_to_text.py data/mimic/label_types.json \
+        data/ccs/dxref2015_text.json \
+        data/mimic/predictions_processed_data.test.json \
+        data/mimic/results_processed_data.predictions.csv \
+        data/mimic/results_processed_data.actuals.csv -v
     ```
 
 ## Extensions
 
-The ways in which you could extend this include modifying this model to predict timing of events or to predict a specific type of diagnosis only, or extending it to predict drug and procedure events in addition to diagnostics.
-
-MANAGING C9 COSTS; HIBERNATION
-UPLOADING AND DOWNLOADING FILES
-CLEANING UP ENVIRONMENT
+Many extensions are possible. For example, you could modify the model to predict timing of events or to predict only a specific type of diagnosis. You could also extend it to predict drug and procedure events in addition to diagnostics.
