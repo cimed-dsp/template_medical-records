@@ -2,9 +2,9 @@
 
 ## Overview
 
-This project uses the MIMIC-III dataset, which is freely available, but requires credentialling through CITI and MIT.  If you have not already completed the process to get access to the database, see [PhysioNet](https://physionet.org/content/mimiciii/1.4/).
+This project uses the MIMIC-III dataset, which is available free of cost to users authorized through CITI and MIT.  If you have not yet completed the process to access the database, see [PhysioNet](https://physionet.org/content/mimiciii/1.4/).
 
-This project will walk you through an implementation using EMR ICD-9 data codes from the MIMIC dataset to predict future hospital events. Specifically, it uses the ADMISSIONS.csv and DIAGNOSES_ICD.csv files, which contain diagnosis codes.  Additional codes in the MIMIC dataset include procedure and drug codes.
+This project will use EMR ICD-9 data codes from the MIMIC dataset to predict future hospital events. Specifically, it uses the ADMISSIONS.csv and DIAGNOSES_ICD.csv files, which contain diagnosis codes.  Additional codes in the MIMIC dataset include procedure and drug codes.
 
 ## Resources
 
@@ -33,15 +33,25 @@ On the first page of the form, give your Cloud9 environment a name (e.g., `<your
 
 On the second page of the form, use default values for all sections except "Platform", which you should change to "Ubuntu Server 18.04 LTS". Press the "Next step" button.
 
-On the third page of the form, scroll to the bottom and press the "Create environment" button. **FIXME** click "Open IDE" button to open.
+On the third page of the form, scroll to the bottom and press the "Create environment" button. On-screen messages will report progress, and when your environment is ready, you'll see a welcome screen.
 
-Inside your Cloud9 environment, you will see a panel on the left that shows your files. You can upload a file from your computer by dragging it over this panel and dropping it into the desired folder. You can download a file to your computer by right-clicking on its name and selecting "Download" from the menu that appears. Double-clicking a file will open it for editing in a tab on the right side of the screen. You'll also have a tab on the right side of the screen that contains a terminal with a command prompt, and you can add more terminal tabs using the green plus icon that appears in the tab bar.
-   
-Your Cloud9 environment will hibernate if idle for more than 30 minutes or if your AWS session expires. This reduces costs and keeps your Cloud9 environment secure. Whenever your Cloud9 environment hibernates, you can resume the session by doing the following: In a new tab, sign in at [AWS at Illinois](https://aws.illinois.edu). You will be redirected to an AWS page that includes a link to Cloud9 FIXME. Click the "Cloud9" link and then click "Open IDE" on the next page. At this point, you can close your old Cloud9 tab. In your restarted Cloud9 environment, your files will be restored exactly as they were, but any terminal tabs will be restarted. You will probably want to change back to your previous working directory (e.g., for the tutorial, `cd dsp_emr`) and reactivate your conda environment (`conda activate dsp_emr`).
+#### Using Cloud9
 
-When you no longer need your Cloud9 environment, make sure you have another copy of all of your files, and then return to [Cloud9 on AWS](https://us-east-2.console.aws.amazon.com/cloud9/home/), press the "Delete" button, and FIXME.
+Inside your Cloud9 environment, you will see a panel on the left that shows your files. You can upload a file from your computer by dragging it over this panel and dropping it into the desired folder. You can download a file to your computer by right-clicking on its name and selecting "Download" from the menu that appears. Double-clicking a file will open it for editing in a tab on the right side of the screen.
 
-Commands in the following steps should be run from the prompt in a terminal tab in your Cloud9 environment.
+You'll also have a tab near the bottom of the screen that contains a terminal with a command prompt. Commands in the following steps should be run from the prompt in a terminal tab in your Cloud9 environment.
+
+You can resize and rearrange the panels on the screen, create new terminal tabs and file tabs, and customize your environment in other ways; see [the tour](https://docs.aws.amazon.com/console/cloud9/tutorial-tour-ide) for more information.
+
+#### Cloud9 hibernation
+
+Your Cloud9 environment will hibernate if idle for more than 30 minutes or if your AWS session expires. This reduces costs and keeps your Cloud9 environment secure.
+
+Whenever your Cloud9 environment hibernates, you can resume the session by doing the following: In a new tab, sign in at [AWS at Illinois](https://aws.illinois.edu). You will be redirected to an AWS page that includes a link to Cloud9 FIXME. Click the "Cloud9" link and then click "Open IDE" on the next page. At this point, you can close your old Cloud9 tab. In your restarted Cloud9 environment, your files will be restored exactly as they were, but any terminal tabs will be restarted. You will probably want to change back to your previous working directory (e.g., for the tutorial, `cd dsp_emr`) and reactivate your conda environment (`conda activate dsp_emr`).
+
+#### Destroying a Cloud9 environment
+
+When you no longer need your Cloud9 environment, make sure you have another copy of all of your files, and then return to [Cloud9 on AWS](https://us-east-2.console.aws.amazon.com/cloud9/home/), press the "Delete" button, and follow the on-screen prompts.
 
 ### Step 2. Clone the code repository and change your working directory.
 
@@ -52,15 +62,15 @@ Run the following:
 
 ### Step 3. Expand the disk attached to your Cloud9 environment.
 
-The command below will reserve 40 GB of storage, which will be enough for the template project and perhaps enough for your independent project, too. If you later find you need more storage, you can run this command again, replacing 40 with the total number of gigabytes you need.  
+The command below will reserve 40 GB of storage, which will be enough for the template project and perhaps enough for your independent project, too. If you later find you need more storage, you can run this command again, replacing 40 with the total number of gigabytes you need. Note the `. ` at the beginning of the line is required!
   
-    sh setup/resize-disk.sh 40
+    . setup/resize-disk.sh 40
 
 ### Step 4. Install the code dependencies using Anaconda.
 
-Run the following:  
+Run the following (again, the `. ` at the beginning of the first line is required):  
   
-    sh setup/install-conda.sh
+    . setup/install-conda.sh
     conda env create -f setup/dsp-emr-environment.yml
     conda activate dsp_emr
 
@@ -68,7 +78,7 @@ You should now see `(dsp_emr)` appear on the left side of your command prompt.
 
 **If at any point you open a new terminal in Cloud9, or if your Cloud9 environment is restarted after hibernation, you will need to run `conda activate dsp_emr` before running any of the files in the `scripts/` directory.**
 
-### Step 5. Download MIMIC dataset files with your PhysioNet `[username]` and `[password]`.
+### Step 5. Download MIMIC dataset files with your PhysioNet credentials.
 
 First, confirm that you have access to MIMIC by opening [https://physionet.org/content/mimiciii/1.4/](https://physionet.org/content/mimiciii/1.4/) in your browser.
    
@@ -79,7 +89,7 @@ Scroll to the "Files" section of the page. If you see a restricted-access warnin
     wget --user [username] --ask-password -O data/mimic/mimic-iii-clinical-database-1.4.zip \
         https://physionet.org/content/mimiciii/get-zip/1.4/
 
-To confirm the download was successful, run the following command. It should produce "a3eb25060b7dc0843fe2235d81707552" as output.  
+To confirm the download was successful, run the following command. It should produce `a3eb25060b7dc0843fe2235d81707552` as output.  
   
     md5sum data/mimic/mimic-iii-clinical-database-1.4.zip
 
@@ -94,9 +104,9 @@ Later, while working on your independent project, you might be interested in oth
   
     unzip -l data/mimic/mimic-iii-clinical-database-1.4.zip
 
-### Step 7. Create mappings from Clinical Classifications Software (CCS) codes to ICD-9 codes diagnoses (`dxref2015.csv`) and procedures (`prref2015.csv`).
+### Step 7. Create mappings from Clinical Classifications Software (CCS) codes to ICD-9 codes.
 
-The mapping data is derived from [Healthcare Cost and Utilization Project data](https://www.hcup-us.ahrq.gov/toolssoftware/ccs/ccs.jsp).
+The diagnoses (`dxref2015.csv`) and procedures (`prref2015.csv`) mapping data are derived from [Healthcare Cost and Utilization Project data](https://www.hcup-us.ahrq.gov/toolssoftware/ccs/ccs.jsp).
 
 Run the following:  
   
@@ -116,9 +126,9 @@ Run the following:
 
 ### Step 9. Train a DoctorAI model.
 
-The model will take in 4894 diagnostic codes of one visit and predicts 273 CCS codes for the next visit. The training will use 10 epochs. `python3 scripts/doctor_ai.py -h` will print details about the default structure of the model. The `THEANO_FLAGS` portion of the command below suppresses a harmless warning message.
+The model will take in 4894 diagnostic codes of one visit and predicts 273 CCS codes for the next visit. The training will use 10 epochs. `python3 scripts/doctor_ai.py -h` will print details about the default structure of the model.
 
-Run the following:  
+Run the following (the `THEANO_FLAGS` portion of the command below suppresses a warning message that's safe to ignore):  
   
     THEANO_FLAGS='optimizer_excluding=scanOp_pushout_output' python3 \
         scripts/doctor_ai.py data/mimic/seqs_visit.train.json \
