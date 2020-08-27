@@ -23,6 +23,7 @@ outputs:
 '''
 import argparse
 from collections import OrderedDict
+from datetime import datetime
 import heapq
 import json
 import logging
@@ -149,7 +150,7 @@ def load_data(dataFile, labelFile, timeFile):
     test_set_x = [test_set_x[i] for i in sorted_index]
     test_set_y = [test_set_y[i] for i in sorted_index]
     if len(timeFile) > 0:
-        test_set_t = [test_set_t[i] for i in sorted_index]
+        test_set_t = [datetime.fromisoformat(test_set_t[i]) for i in sorted_index]
 
     test_set = (test_set_x, test_set_y, test_set_t)
 

@@ -32,6 +32,7 @@ The outputs:
 
 import argparse
 from collections import OrderedDict
+from datetime import datetime
 import json
 import random
 import sys
@@ -324,9 +325,9 @@ def load_data(seqFileTrain, seqFileTest, seqFileValid, labelFileTrain,\
     test_set_y = [test_set_y[i] for i in test_sorted_index]
 
     if len(timeFileTrain) > 0:
-        train_set_t = [train_set_t[i] for i in train_sorted_index]
-        valid_set_t = [valid_set_t[i] for i in valid_sorted_index]
-        test_set_t = [test_set_t[i] for i in test_sorted_index]
+        train_set_t = [datetime.fromisoformat(train_set_t[i]) for i in train_sorted_index]
+        valid_set_t = [datetime.fromisoformat(valid_set_t[i]) for i in valid_sorted_index]
+        test_set_t = [datetime.fromisoformat(test_set_t[i]) for i in test_sorted_index]
 
     train_set = (train_set_x, train_set_y, train_set_t)
     valid_set = (valid_set_x, valid_set_y, valid_set_t)
