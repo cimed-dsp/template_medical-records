@@ -128,7 +128,7 @@ Run the following:
 
 The model will take in 4894 diagnostic codes of one visit and predicts 273 CCS codes for the next visit. The training will use 10 epochs. `python3 scripts/doctor_ai.py -h` will print details about the default structure of the model.
 
-Run the following (the `THEANO_FLAGS` portion of the command below suppresses a warning message that's safe to ignore):  
+Run the following (the `THEANO_FLAGS` portion of the command below suppresses [a warning message that's safe to ignore](https://github.com/lvapeab/nmt-keras/issues/66)):  
   
     THEANO_FLAGS='optimizer_excluding=scanOp_pushout_output' python3 \
         scripts/doctor_ai.py data/mimic/seqs_visit.train.json \
