@@ -39,7 +39,7 @@ On the third page of the form, scroll to the bottom and press the "Create enviro
 
 Inside your Cloud9 environment, you will see a panel on the left that shows your files. You can upload a file from your computer by dragging it over this panel and dropping it into the desired folder. You can download a file to your computer by right-clicking on its name and selecting "Download" from the menu that appears. Double-clicking a file will open it for editing in a tab on the right side of the screen.
 
-You'll also have a tab near the bottom of the screen that contains a terminal with a command prompt. Commands in the following steps should be run from the prompt in a terminal tab in your Cloud9 environment.
+You'll also see a tab near the bottom of the screen that contains a terminal with a command prompt. Commands in the following steps should be run from the prompt in a terminal tab in your Cloud9 environment.
 
 You can resize and rearrange the panels on the screen, create new terminal tabs and file tabs, and customize your environment in other ways; see [the tour](https://docs.aws.amazon.com/console/cloud9/tutorial-tour-ide) for more information.
 
@@ -47,7 +47,7 @@ You can resize and rearrange the panels on the screen, create new terminal tabs 
 
 Your Cloud9 environment will hibernate if idle for more than 30 minutes or if your AWS session expires. This reduces costs and keeps your Cloud9 environment secure.
 
-Whenever your Cloud9 environment hibernates, you can resume the session by doing the following: In a new tab, sign in at [AWS at Illinois](https://aws.illinois.edu). You will be redirected to an AWS page that includes a link to Cloud9 FIXME. Click the "Cloud9" link and then click "Open IDE" on the next page. At this point, you can close your old Cloud9 tab. In your restarted Cloud9 environment, your files will be restored exactly as they were, but any terminal tabs will be restarted. You will probably want to change back to your previous working directory (e.g., for the tutorial, `cd dsp_emr`) and reactivate your conda environment (`conda activate dsp_emr`).
+Whenever your Cloud9 environment hibernates, you can resume your session by doing the following: First, you can close your old Cloud9 tab. In a new tab, sign in at [AWS at Illinois](https://aws.illinois.edu) and then open your [Cloud9 dashboard](https://us-east-2.console.aws.amazon.com/cloud9/home?region=us-east-2). Press either one of the "Open IDE" buttons on the screen. In your restarted Cloud9 environment, your files will be restored exactly as they were, but any terminal tabs will be reinitialized. You will probably want to change back to your previous working directory (for the tutorial, `cd dsp_emr`) and reactivate your Anaconda environment (`conda activate dsp_emr`).
 
 #### Destroying a Cloud9 environment
 
