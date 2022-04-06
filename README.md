@@ -128,7 +128,9 @@ Run the following (again, the `. ` at the beginning of the first line is require
     conda env create -f setup/dsp-emr-environment.yml
     conda activate dsp_emr
 
-You should now see `(dsp_emr)` appear on the left side of your command prompt. (You might notice the command output advises you to close and re-open your current shell, but as long as you see `(dsp_emr)` on the left side of your command prompt, you can ignore the message.)
+You will be prompted to press `Enter` to accept the Anaconda user license, and you should answer `yes` at the terminal when prompted to accept the license, and enter `yes` again when prompted about initiating conda.  
+
+When you activate the dsp_emr environment after creating it, you may see four ERRORs about cross-compiler, these do not impact the project and can be ignored.  You should now see `(dsp_emr)` appear on the left side of your command prompt. (You might notice the command output advises you to close and re-open your current shell, but as long as you see `(dsp_emr)` on the left side of your command prompt, you can ignore the message.)
 
 **If at any point you open a new terminal in Cloud9, or if your Cloud9 environment is restarted after hibernation, you will need to run `conda activate dsp_emr` before running any of the files in the `scripts/` directory.**
 
