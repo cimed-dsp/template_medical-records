@@ -83,6 +83,12 @@ You'll also see a tab near the bottom of the screen that contains a terminal wit
 
 You can resize and rearrange the panels on the screen, create new terminal tabs and file tabs, and customize your environment in other ways; see [the tour](https://docs.aws.amazon.com/console/cloud9/tutorial-tour-ide) for more information.
 
+If you ever want to reboot your instance, use the linux command:
+
+	sudo reboot now
+
+at the terminal.  You will see the Cloud 9 logo pop up and after a miute or so, the instance will reconnect.  After rebooting, you will need to `cd template_medical-records` to change directory back to the project, and reactivate conda `conda activate dsp_emr`.
+
 To go back to AWS, click the Cloud 9 logo at screen top left to open the top level menu and select `Go To Your Dashboard`.  There is no "shutdown" or "hibernate" button, so when you're done with your processing and want to leave, we recommend downloading or backing up and critical output/results, then simply close the tab.
 
 #### Cloud9 hibernation
@@ -145,8 +151,8 @@ To confirm the download was successful, run the following command. It should pro
 
 Run the following:  
   
-    unzip -p data/mimic-iii-clinical-database-1.4.zip mimic-iii-clinical-database-1.4/ADMISSIONS.csv.gz | gunzip > data/mimic/ADMISSIONS.csv
-    unzip -p data/mimic-iii-clinical-database-1.4.zip mimic-iii-clinical-database-1.4/DIAGNOSES_ICD.csv.gz | gunzip > data/mimic/DIAGNOSES_ICD.csv
+    unzip -p data/mimic/mimic-iii-clinical-database-1.4.zip mimic-iii-clinical-database-1.4/ADMISSIONS.csv.gz | gunzip > data/mimic/ADMISSIONS.csv
+    unzip -p data/mimic/mimic-iii-clinical-database-1.4.zip mimic-iii-clinical-database-1.4/DIAGNOSES_ICD.csv.gz | gunzip > data/mimic/DIAGNOSES_ICD.csv
 
 Later, while working on your independent project, you might be interested in other tables from the MIMIC database. You can produce a list of them by running the following:  
   
