@@ -25,7 +25,7 @@ And uses the codebase developed and available here:
 [https://github.com/mp2893/doctorai](https://github.com/mp2893/doctorai)
 (The procedure below will copy a different version of this code.)
 
-This project was written in Python.  For more information and resources for learning the python language, please visit the [Carle Illinois Virtual Library](https://guides.library.illinois.edu/cimed/datascience)
+This project was written in Python.  For more information and resources for learning the python language, please visit the [Carle Illinois Virtual Library](https://guides.library.illinois.edu/enginnovation/datascience)
 Tags:
 
 - EMR
