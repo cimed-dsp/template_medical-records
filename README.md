@@ -62,11 +62,11 @@ Once you have AWS and MIMIC-III access you are ready to begin Step 1.
 
 ### Step 1. Create your Cloud9 environment
 
-In your browser, open the [AWS at Illinois](https://aws.illinois.edu) page and sign in. Once you are redirected to AWS, open the [Cloud9 creation form](https://us-east-2.console.aws.amazon.com/cloud9/home/create).
+In your browser, open the [AWS at Illinois](https://aws.illinois.edu) page and sign in. Once you are redirected to AWS, first set your Region (uper right corner) to Ohio/east-2.  Default is Virginia/east-1. Next, open the [Cloud9 creation form](https://us-east-2.console.aws.amazon.com/cloud9/home/create).
 
 On the first page of the form, give your Cloud9 environment a name (e.g., `<your-net-id>-emr`). Enter a description if you like. Press the "Next step" button.
 
-On the second page of the form, use default values for all sections except "Platform", which you should change to "Ubuntu Server 18.04 LTS". Press the "Next step" button.
+On the second page of the form, make the following changes: for "Instance type", select "Other Instance Type" and choose `t3.medium` from the dropdown menu.  Next change "Platform", which you should change to "Ubuntu Server 18.04 LTS". Press the "Next step" button.
 
 On the third page of the form, scroll to the bottom and press the "Create environment" button. On-screen messages will report progress, and when your environment is ready, you'll see a welcome screen.
 
@@ -132,8 +132,8 @@ To confirm the download was successful, run the following command. It should pro
 
 Run the following:  
   
-    unzip -p data/mimic/mimic-iii-clinical-database-1.4.zip mimic-iii-clinical-database-1.4/ADMISSIONS.csv.gz | gunzip > data/mimic/ADMISSIONS.csv
-    unzip -p data/mimic/mimic-iii-clinical-database-1.4.zip mimic-iii-clinical-database-1.4/DIAGNOSES_ICD.csv.gz | gunzip > data/mimic/DIAGNOSES_ICD.csv
+    unzip -p data/mimic-iii-clinical-database-1.4.zip mimic-iii-clinical-database-1.4/ADMISSIONS.csv.gz | gunzip > data/mimic/ADMISSIONS.csv
+    unzip -p data/mimic-iii-clinical-database-1.4.zip mimic-iii-clinical-database-1.4/DIAGNOSES_ICD.csv.gz | gunzip > data/mimic/DIAGNOSES_ICD.csv
 
 Later, while working on your independent project, you might be interested in other tables from the MIMIC database. You can produce a list of them by running the following:  
   
