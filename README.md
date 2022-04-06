@@ -14,12 +14,12 @@ This project was built from the work detailed in two papers:
 
 Doctor AI: Predicting Clinical Events via Recurrent Neural Networks
 Edward Choi, Mohammad Taha Bahadori, Andy Schuetz, Walter F. Stewart, Jimeng Sun
-arXiv preprint arXiv:1511.05942
+arXiv preprint [arXiv:1511.05942](https://arxiv.org/abs/1511.05942)
 
 Medical Concept Representation Learning from Electronic Health
 Records and its Application on Heart Failure Prediction
 Edward Choi, Andy Schuetz, Walter F. Stewart, Jimeng Sun
-arXiv preprint arXiv:1602.03686
+arXiv preprint [arXiv:1602.03686](https://arxiv.org/abs/1602.03686)
 
 And uses the codebase developed and available here:
 [https://github.com/mp2893/doctorai](https://github.com/mp2893/doctorai)
@@ -62,11 +62,16 @@ Once you have AWS and MIMIC-III access you are ready to begin Step 1.
 
 ### Step 1. Create your Cloud9 environment
 
-In your browser, open the [AWS at Illinois](https://aws.illinois.edu) page and sign in. Once you are redirected to AWS, first set your Region (uper right corner) to Ohio/east-2.  Default is Virginia/east-1. Next, open the [Cloud9 creation form](https://us-east-2.console.aws.amazon.com/cloud9/home/create).
+In your browser, open the [AWS at Illinois](https://aws.illinois.edu) page and sign in with your usual Illinois credentials. Once you are redirected to AWS, first set your Region (uper right corner) to Ohio/us-east-2.  Default is N.Virginia/us-east-1. Next, open the [Cloud9 creation form](https://us-east-2.console.aws.amazon.com/cloud9/home/create).
 
 On the first page of the form, give your Cloud9 environment a name (e.g., `<your-net-id>-emr`). Enter a description if you like. Press the "Next step" button.
 
-On the second page of the form, make the following changes: for "Instance type", select "Other Instance Type" and choose `t3.medium` from the dropdown menu.  Next change "Platform", which you should change to "Ubuntu Server 18.04 LTS". Press the "Next step" button.
+On the second page of the form, make the following changes: 
+
+- For "Instance type", select "Other Instance Type" and choose `t3.medium` from the dropdown menu.  
+- Change "Platform" to "Ubuntu Server 18.04 LTS" 
+
+Press the "Next step" button.
 
 On the third page of the form, scroll to the bottom and press the "Create environment" button. On-screen messages will report progress, and when your environment is ready, you'll see a welcome screen.
 
@@ -77,6 +82,8 @@ Inside your Cloud9 environment, you will see a panel on the left that shows your
 You'll also see a tab near the bottom of the screen that contains a terminal with a command prompt. Commands in the following steps should be run from the prompt in a terminal tab in your Cloud9 environment.
 
 You can resize and rearrange the panels on the screen, create new terminal tabs and file tabs, and customize your environment in other ways; see [the tour](https://docs.aws.amazon.com/console/cloud9/tutorial-tour-ide) for more information.
+
+To go back to AWS, click the Cloud 9 logo at screen top left to open the top level menu and select `Go To Your Dashboard`.  There is no "shutdown" or "hibernate" button, so when you're done with your processing and want to leave, we recommend downloading or backing up and critical output/results, then simply close the tab.
 
 #### Cloud9 hibernation
 
