@@ -108,6 +108,12 @@ The command below will reserve 40 GB of storage, which will be enough for the te
   
     . setup/resize-disk.sh 40
 
+Confirm that you have the expanded storage by using the command:
+	
+	df -h ~
+
+You should see the Size of your storage, the GB Used, and the available storage remaining, Avail.   Make sure Size is close to 40GB if you used 40 for the resize command.  It may be 39GB; this is fine.
+
 ### Step 4. Install the code dependencies using Anaconda
 
 Run the following (again, the `. ` at the beginning of the first line is required):  
