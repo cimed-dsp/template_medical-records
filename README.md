@@ -42,13 +42,11 @@ Tags:
 The MIMIC III Database is hosted on Physionet and access is controlled by a data group at MIT.  In order to access the MIMIC database, you need to follow these directions:
 
 1. Register for an account on PhysioNet: [https://physionet.org](https://physionet.org/). If you already have a PhysioNet account, log in.
-2. Fill out the [MIMIC Request Access Form](https://forms.gle/UAE6PBTNM1S7sqBVA)
-3. Register on the CITI program website, selecting “Massachusetts Institute of Technology Affiliates” as your affiliation (not “independent learner”): [https://www.citiprogram.org/index.cfm?pageID=154&icat=0&ac=0](https://www.citiprogram.org/index.cfm?pageID=154&icat=0&ac=0)
-4. Generate a PDF of the CITI Completion Certificate showing all modules completed with dates and scores
-5. Complete the MIMIC III Credentialed user form by logging into your Physionet account here: [https://physionet.org/login/?next=/settings/credentialing/](https://physionet.org/login/?next=/settings/credentialing/)
+2. Register on the CITI program website, selecting “Massachusetts Institute of Technology Affiliates” as your affiliation (not “independent learner”): [https://www.citiprogram.org/index.cfm?pageID=154&icat=0&ac=0](https://www.citiprogram.org/index.cfm?pageID=154&icat=0&ac=0)
+3. Generate a PDF of the CITI Completion Certificate showing all modules completed with dates and scores
+4. Complete the MIMIC III Credentialed user form by logging into your Physionet account here: [https://physionet.org/login/?next=/settings/credentialing/](https://physionet.org/login/?next=/settings/credentialing/)
 
 On the MIMIC III access form:
-
 - For "Supervisor", please list Ruoqing Zhu
 - Provide full contact information
 - Course name: Medicine - Data Science Projects
